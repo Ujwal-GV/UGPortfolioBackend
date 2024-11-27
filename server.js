@@ -49,6 +49,4 @@ app.post("/api/messages", async (req, res) => {
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
-// app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-
 export const handler = serverless(app);
