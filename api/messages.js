@@ -35,6 +35,8 @@ const Message = mongoose.model('Message', messageSchema);
 app.post('/api/messages', async (req, res) => {
   try {
     const { name, email, message } = req.body;
+    console.log(req.body);
+    
     if (!name || !email || !message) {
       return res.status(400).json({ error: 'All fields are required' });
     }
