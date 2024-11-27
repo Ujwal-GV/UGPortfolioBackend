@@ -21,9 +21,23 @@ app.use(cors({
 console.log("MongoDB URI:", process.env.MONGO_URI);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('DB Connection Error:', err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch((err) => console.error('DB Connection Error:', err));
+
+// Define the Message Schema
+const messageSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  message: String,
+  createdAt: { type: Date, default: Date.now },
+});
+
+// Create the Message Model
+const Message = mongoose.model('Message', messageSchema);
 
 // Example route - can be expanded to any number of routes
 app.get('/', (req, res) => {
@@ -38,7 +52,7 @@ app.post('/contact', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // You can store the message in the database if needed
+    // Create and save the message in the database
     const newMessage = new Message({ name, email, message });
     await newMessage.save();
     
@@ -49,13 +63,10 @@ app.post('/contact', async (req, res) => {
   }
 });
 
-// For local development, start server normally
-if (process.env.NODE_ENV !== 'production') {
   const server = http.createServer(app);
   server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
-}
 
 // For serverless environments, export the app as a handler
-export default serverless(app);
+// export default serverless(app);
