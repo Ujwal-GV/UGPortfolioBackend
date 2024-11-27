@@ -16,6 +16,9 @@ app.use(cors({
   methods: ['GET', 'POST'],
 }));
 
+// Log MONGO_URI to ensure it is correctly loaded
+console.log("MongoDB URI:", process.env.MONGO_URI);
+
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -35,8 +38,6 @@ const Message = mongoose.model('Message', messageSchema);
 app.post('/api/messages', async (req, res) => {
   try {
     const { name, email, message } = req.body;
-    console.log(req.body);
-    
     if (!name || !email || !message) {
       return res.status(400).json({ error: 'All fields are required' });
     }
@@ -44,12 +45,11 @@ app.post('/api/messages', async (req, res) => {
     await newMessage.save();
     res.status(201).json({ success: true, data: newMessage });
   } catch (error) {
-    console.error(error);  // Log the error
+    console.error(error);
     res.status(500).json({ error: 'Server Error' });
   }
 });
 
-// Default route
 app.get('/', (req, res) => res.send('Backend is running!'));
 
 // Default export the handler function for serverless
