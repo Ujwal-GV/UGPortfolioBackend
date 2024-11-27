@@ -1,0 +1,16 @@
+service: portfolio-backend
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+functions:
+  app:
+    handler: server.handler
+    events:
+      - http:
+          path: /
+          method: get
+      - http:
+          path: api/messages
+          method: post
