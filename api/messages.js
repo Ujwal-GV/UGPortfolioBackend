@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: '*', // Replace with your frontend URL
+  origin: 'https://ujwal-gowda-portfolio.vercel.app/', // Replace with your frontend URL
   methods: ['GET', 'POST'],
 }));
 
@@ -33,24 +33,22 @@ const messageSchema = new mongoose.Schema({
 const Message = mongoose.model('Message', messageSchema);
 
 app.post('/api/messages', async (req, res) => {
-    console.log("Received request:", req.body); // Log incoming request
-    try {
-      const { name, email, message } = req.body;
-      if (!name || !email || !message) {
-        return res.status(400).json({ error: 'All fields are required' });
-      }
-      const newMessage = new Message({ name, email, message });
-      await newMessage.save();
-      console.log("Message saved:", newMessage); // Log successful save
-      res.status(201).json({ success: true, data: newMessage });
-    } catch (error) {
-      console.error("Error saving message:", error); // Log error if any
-      res.status(500).json({ error: 'Server Error' });
+  try {
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
-  });  
+    const newMessage = new Message({ name, email, message });
+    await newMessage.save();
+    res.status(201).json({ success: true, data: newMessage });
+  } catch (error) {
+    console.error(error);  // Log the error
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
 
 // Default route
 app.get('/', (req, res) => res.send('Backend is running!'));
 
-// Export the handler for serverless function
-export const handler = serverless(app);
+// Default export the handler function for serverless
+export default serverless(app);
