@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'https://ujwal-gowda-portfolio.vercel.app/', // Replace with your frontend URL
+  origin: '*', // Replace with your frontend URL
   methods: ['GET', 'POST'],
 }));
 
