@@ -1,16 +1,20 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: ujwalgowda
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: portfolio
 service: portfolio-backend
+
 provider:
   name: aws
   runtime: nodejs18.x
-  region: us-east-1
 
 functions:
   app:
-    handler: server.handler
+    handler: index.app
     events:
       - http:
           path: /
           method: get
       - http:
-          path: /index
+          path: /contact
           method: post
