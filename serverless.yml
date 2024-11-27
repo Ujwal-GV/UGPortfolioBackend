@@ -12,5 +12,5 @@ functions:
           path: /
           method: get
       - http:
-          path: api/messages
+          path: /index
           method: post

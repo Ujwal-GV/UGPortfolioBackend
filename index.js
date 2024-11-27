@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import serverless from 'serverless-http';
+import http from 'http'; // Import the Node.js http module
 
 dotenv.config();
 
@@ -19,12 +19,9 @@ app.use(cors({
 // Log MONGO_URI to ensure it is correctly loaded
 console.log("MongoDB URI:", process.env.MONGO_URI);
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('DB Connection Error:', err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('DB Connection Error:', err));
 
 const messageSchema = new mongoose.Schema({
   name: String,
@@ -52,5 +49,13 @@ app.post('/api/messages', async (req, res) => {
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
-// Default export the handler function for serverless
-export default serverless(app);
+// Create an HTTP server and pass the Express app
+const server = http.createServer(app);
+
+// Start the server
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// Export for serverless environments like AWS Lambda or Vercel (optional)
+export default server;
