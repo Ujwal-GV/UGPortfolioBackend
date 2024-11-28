@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http'; // Required for serverless
 import serverless from 'serverless-http'; // For serverless deployment
+import { log } from 'console';
 
 dotenv.config();
 
@@ -12,10 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
-app.use(cors({
-  origin: '*', // Replace with your frontend URL if needed
-  methods: ['GET', 'POST'],
-}));
+app.use(cors());
 
 // Log MONGO_URI to ensure it's correctly loaded
 console.log("MongoDB URI:", process.env.MONGO_URI);
@@ -60,6 +58,15 @@ app.post('/contact', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+app.get('/messages', async (req, res) => {
+  try {
+    const messages = await Message.find();
+    res.json({ messages });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve messages' });
   }
 });
 
